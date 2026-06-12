@@ -1,0 +1,115 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-06-12",
+  "locale": "es-ES",
+  "rules": [
+    {
+      "id": "seguridad-social-bizum-request",
+      "category": "payment-request",
+      "severity": "high",
+      "signals": {
+        "keywordGroups": [
+          ["seguridad social", "seg. social", "tesoreria general"],
+          ["bizum", "transferencia", "pago inmediato"],
+          ["deuda", "regularizar", "sancion", "suspension", "bloqueo de prestacion"]
+        ],
+        "minGroupMatches": 2
+      },
+      "userMessage": "La Seguridad Social nunca pide pagos por Bizum ni por SMS. Esto puede ser una estafa. No envíes dinero ni datos. ¿Llamamos a tu familiar?",
+      "source": "INCIBE - aviso de suplantación de la Seguridad Social (2025-2026)"
+    },
+    {
+      "id": "banco-enlace-urgente",
+      "category": "suspicious-link",
+      "severity": "high",
+      "signals": {
+        "keywordGroups": [
+          ["cuenta", "tarjeta", "banco", "acceso a tu banca"],
+          ["bloqueada", "bloqueo", "suspendida", "verificar", "verifica tu cuenta", "restringido", "caducado"]
+        ],
+        "minGroupMatches": 2
+      },
+      "userMessage": "Los bancos no avisan de bloqueos por SMS con enlaces. No pulses el enlace. Llama a tu banco con el número de tu tarjeta, o llama a tu familiar.",
+      "source": "INCIBE / OCU - alertas de smishing bancario"
+    },
+    {
+      "id": "llamada-prefijo-internacional-sospechoso",
+      "category": "caller-id-spoofing",
+      "severity": "medium",
+      "signals": {
+        "regex": ["^\\+(44|234|212|971|216|225|375)"]
+      },
+      "userMessage": "Esta llamada parece venir del extranjero y puede tener un coste muy alto o ser una estafa. No la devuelvas. Si era importante, te escribirán o volverán a llamar.",
+      "source": "INCIBE - aviso sobre llamadas con prefijos internacionales de alto coste"
+    },
+    {
+      "id": "familiar-en-apuros-whatsapp",
+      "category": "impersonation",
+      "severity": "high",
+      "signals": {
+        "keywordGroups": [
+          ["nuevo numero", "se me ha roto el movil", "cambie de numero", "este es mi numero nuevo", "perdi el movil"],
+          ["bizum", "transferencia", "envia dinero", "necesito dinero", "prestame", "hazme un ingreso"]
+        ],
+        "minGroupMatches": 2
+      },
+      "userMessage": "Es un truco habitual: alguien se hace pasar por un familiar desde un número nuevo y pide dinero urgente. Llama al número antiguo de esa persona para confirmarlo antes de enviar nada.",
+      "source": "INCIBE / Policía Nacional - estafa 'tengo un nuevo número'"
+    },
+    {
+      "id": "paquete-pendiente-enlace",
+      "category": "suspicious-link",
+      "severity": "medium",
+      "signals": {
+        "keywordGroups": [
+          ["paquete", "envio", "pedido", "aduana"],
+          ["pagar", "tasa", "abonar", "confirmar entrega", "pulsa el enlace", "pincha aqui"]
+        ],
+        "minGroupMatches": 2
+      },
+      "userMessage": "Las empresas de paquetería no suelen pedir pagos por SMS con enlaces. No pulses el enlace. Si esperas un paquete, consúltalo en la web o app oficial de la empresa.",
+      "source": "INCIBE - aviso de smishing de paquetería (Correos / SEUR / DHL)"
+    },
+    {
+      "id": "codigo-verificacion-solicitado",
+      "category": "data-request",
+      "severity": "high",
+      "signals": {
+        "keywordGroups": [
+          ["codigo de verificacion", "codigo de seguridad", "codigo que te ha llegado", "codigo sms", "clave de un solo uso", "dime el codigo"]
+        ],
+        "minGroupMatches": 1
+      },
+      "userMessage": "Nunca compartas un código que recibas por SMS, ni con el banco ni con nadie que te llame. Cuelga y llama a tu familiar.",
+      "source": "INCIBE - fraude por código de verificación (Bizum / banca online)"
+    },
+    {
+      "id": "oferta-trabajo-facil-dinero",
+      "category": "payment-request",
+      "severity": "medium",
+      "signals": {
+        "keywordGroups": [
+          ["trabajo desde casa", "gana dinero facil", "ingresos extra", "oferta de empleo"],
+          ["tu cuenta bancaria", "recibir transferencias", "tarjeta para recibir pagos"]
+        ],
+        "minGroupMatches": 2
+      },
+      "userMessage": "Las ofertas de 'dinero fácil' que piden usar tu cuenta bancaria suelen ser estafas y pueden meterte en problemas legales. No aceptes. ¿Llamamos a tu familiar?",
+      "source": "INCIBE / Policía Nacional - estafas de 'mulas bancarias'"
+    },
+    {
+      "id": "soporte-tecnico-falso",
+      "category": "impersonation",
+      "severity": "high",
+      "signals": {
+        "keywordGroups": [
+          ["soporte tecnico", "microsoft", "tu ordenador tiene un virus", "hemos detectado un problema"],
+          ["instale", "anydesk", "teamviewer", "acceso remoto", "control remoto"]
+        ],
+        "minGroupMatches": 2
+      },
+      "userMessage": "Las empresas de informática no llaman así, ni piden instalar programas de control remoto. No instales nada. Cuelga y llama a tu familiar.",
+      "source": "INCIBE - aviso de fraude de falso soporte técnico"
+    }
+  ]
+}

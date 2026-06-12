@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/aminch18/stop-and-call/blob/main/rules/schema/ruleset.schema.json",
+  "title": "Stop & Call - Fraud detection ruleset",
+  "description": "Local, on-device ruleset used by rules-engine to evaluate shared text (SMS/WhatsApp/email) and flag potential scam signals. No network calls; everything is processed on the device (see docs/PRIVACIDAD.md).",
+  "type": "object",
+  "required": ["version", "lastUpdated", "locale", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "SemVer version of this ruleset file.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "description": "ISO date (YYYY-MM-DD) of the last update.",
+      "format": "date"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale this ruleset targets.",
+      "enum": ["es-ES"]
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/rule" }
+    }
+  },
+  "definitions": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "severity", "signals", "userMessage", "source"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identifier, kebab-case, English.",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "payment-request",
+            "urgency",
+            "suspicious-link",
+            "impersonation",
+            "caller-id-spoofing",
+            "data-request"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "signals": {
+          "type": "object",
+          "description": "How rules-engine detects this pattern. At least one of keywordGroups or regex must be present.",
+          "additionalProperties": false,
+          "properties": {
+            "keywordGroups": {
+              "type": "array",
+              "description": "Array of keyword groups. A group matches if ANY of its keywords is found (case-insensitive, accent-insensitive). The rule matches if the number of matching groups >= minGroupMatches.",
+              "items": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1
+              },
+              "minItems": 1
+            },
+            "minGroupMatches": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum number of keywordGroups that must match. Defaults to the total number of groups (i.e. all groups required) if omitted."
+            },
+            "regex": {
+              "type": "array",
+              "description": "Optional additional regex patterns (case-insensitive). If present alongside keywordGroups, ANY regex match OR the keyword-group condition triggers the rule.",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "userMessage": {
+          "type": "string",
+          "description": "Plain-language message shown to the end user. Must follow docs/CONTRIBUTING.md tone checklist: short, second person, no jargon, ends with a concrete action.",
+          "maxLength": 280
+        },
+        "source": {
+          "type": "string",
+          "description": "Where this pattern comes from (e.g. 'INCIBE aviso marzo 2026', 'reporte de usuario')."
+        }
+      }
+    }
+  }
+}
